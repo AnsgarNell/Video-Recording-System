@@ -1,0 +1,85 @@
+cvlc 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080:fps=30' :input-slave="alsa://hw:1" --sout '#transcode{acodec=mp3,ab=16}:file{mux=ts,dst=webcam-test.h264,access=file{append}}' --run-time=30 vlc://quit
+
+cvlc 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080' --sout '#file{access=file,mux=ts,dst=test.mp4}' :demux=h264 --run-time=30 vlc://quit
+
+
+cvlc 'v4l2:///dev/video1:chroma=H264:width=1920:height=1080' --sout '#file{access=file{append},mux=ts,dst=test_append.h264}' --run-time=30 vlc://quit
+cvlc 'v4l2:///dev/video2:chroma=H264:width=1920:height=1080' --sout '#file{access=file{append},mux=ts,dst=test_append.h264}' --run-time=30 vlc://quit
+
+
+cvlc -v 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080' :input-slave="alsa://hw:0" --sout '#file{access=file,mux=ts,dst=test.mp4,overwrite}' --run-time=30 vlc://quit
+
+
+cvlc 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080:fps=30' :input-slave="alsa://hw:1" --sout '#transcode{acodec=mp3,ab=16}:file{mux=ts,dst=test_fifo.h264,access=file}' --run-time=30 vlc://quit
+
+
+cvlc test_fifo.h264 --sout '#transcode{acodec=mp3,ab=16}:file{access=file,mux=ts,dst=salida.mp4}' --run-time=30 vlc://quit
+
+
+transcode{vcodec=none,acodec=mp4a,ab=128,channels=2,samplerate=48000}:std{access=file,mux=mp4,dst='C:\Users\jonnydmxy\Desktop\tig.mp4
+
+vlc video0.ts video1.ts video2.ts video3.ts video4.ts video5.ts video6.ts video7.ts video8.ts video9.ts --sout "#gather:std{access=file,mux=mp4,dst=all.mp4}" --sout-keep -I dummy vlc://quit
+
+
+cvlc video_output.mp4 :input-slave=concat.aac --sout '#file{mux=ts,dst=concat.mp4,overwrite}' vlc://quit
+
+
+cvlc 'v4l2:///dev/video1:chroma=H264:width=1920:height=1080:fps=30' :input-slave="alsa://hw:1" --sout '#transcode{acodec=mp3,ab=32}:std{access=file,mux=dummy,dst=fifo1,access=file{append}}' --run-time=30 vlc://quit
+
+cvlc 'v4l2:///dev/video1:chroma=H264:width=1920:height=1080:fps=30' :input-slave="alsa://hw:1" --sout '#transcode{acodec=mp3,ab=32}:file{dst=webcam-test.mp4,access=file{append}}' --run-time=30 vlc://quit
+
+
+
+cvlc -vvv 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080' :input-slave="alsa://hw:0" --sout '#transcode{acodec=mp3,ab=32}:file{mux=ts,dst=video_prueba.mp4}' --run-time=300 vlc://quit
+
+(audio only)
+cvlc 'alsa://hw:1 --sout '#transcode{acodec=mp3,ab=32}:file{dst=audio_prueba.mp3,overwrite}' --run-time=5 vlc://quit
+
+(video only)
+cvlc 'v4l2:///dev/video1:chroma=H264:width=1920:height=1080' --sout '#file{mux=ts,dst=video_prueba1.h264,overwrite}' --run-time=10 vlc://quit
+
+cvlc 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080' --sout '#file{mux=ts,dst=video_prueba0.h264,overwrite}' --run-time=10 vlc://quit
+
+
+
+
+vlc video0.h264 video4.h264 video5.h264 video6.h264 video7.h264 video8.h264 video9.h264 --sout "#gather:std{access=file,mux=ts,dst=all.h264}" --sout-keep -I dummy vlc://quit
+
+vlc video_prueba0.h264 video_prueba1.h264 --sout "#gather:std{access=file,mux=ts,dst=all.h264}" --sout-keep -I dummy vlc://quit
+
+
+
+ps -U root -u root -N
+
+cvlc -vvv 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080' :input-slave="alsa://hw:0" --sout '#transcode{acodec=mp3,ab=32}:file{mux=ts,dst=video_prueba.mp4}' --run-time=10 vlc://quit 2>&1 | grep -v "Buffering 0%" | grep "Buffering" 
+
+cvlc -vvv 'v4l2:///dev/video0:chroma=H264:width=1920:height=1080' :input-slave="alsa://hw:0" --sout '#transcode{acodec=mp3,ab=32}:file{mux=ts,dst=video_prueba.mp4,overwrite}' --run-time=10 vlc://quit 2> fifo.pipe
+
+
+grep -v "unwanted_word" file | grep XXXXXXXX
+
+
+libvlc_MediaPlayerOpening
+0.52
+libvlc_MediaPlayerBuffering
+0.52
+libvlc_MediaPlayerPausableChanged
+0.55
+libvlc_MediaPlayerSeekableChanged
+0.55
+libvlc_MediaPlayerLengthChanged
+0.55
+libvlc_MediaPlayerPlaying
+0.58
+libvlc_MediaPlayerBuffering
+0.58
+libvlc_MediaPlayerLengthChanged
+
+
+ g++ VLC.cpp -lvlc -o example -pthread
+ 
+ 
+cvlc video0.mp4 video1.mp4 video2.mp4 video3.mp4 video4.mp4 video5.mp4 video6.mp4 video7.mp4 --sout "#gather:std{access=file,mux=ts,dst=all.mp4}" --sout-keep -I dummy vlc://quit
+
+
+mencoder -oac copy -ovc copy -idx -o output.mp4 video5.mp4 video6.mp4 video7.mp4 video8.mp4 video9.mp4 video10.mp4

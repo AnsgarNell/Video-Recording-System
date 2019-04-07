@@ -1,0 +1,118 @@
+WINDOWS
+ffmpeg -s 1920x1080 -f dshow -vcodec h264 -r 30 -i video="@device_pnp_\\?\usb#vid_046d&pid_082d&mi_00#7&1a5b97c6&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global":audio="@device_cm_{33D9A762-90C8-11D0-BD43-00A0C911CE86}\Microphone (3- HD Pro Webcam C9" -copyinkf -vcodec copy test1.mp4
+
+ffmpeg -s 1920x1080 -f dshow -vcodec h264 -r 30 -i video="@device_pnp_\\?\usb#vid_046d&pid_082d&mi_00#7&295ae046&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global":audio="@device_cm_{33D9A762-90C8-11D0-BD43-00A0C911CE86}\Microphone (2- HD Pro Webcam C9" -copyinkf -vcodec copy test2.mp4
+
+LINUX
+ffmpeg -s 1920x1080 -f v4l2 -vcodec h264 -r 30 -i /dev/video0 -f alsa -i hw:1 -copyinkf -vcodec copy test1.mp4
+
+ffmpeg -s 1920x1080 -f v4l2 -vcodec h264 -i /dev/video0 -copyinkf -vcodec copy -y -r 30 test1.mp4
+
+
+ffmpeg -s 1920x1080 -f v4l2 -vcodec h264 -i /dev/video0 -f alsa -i hw:1 -copyinkf -vcodec copy test1.mkv
+
+
+(audio only)
+ffmpeg -f alsa -i hw:1 -acodec copy test1.mp3
+
+WINDOWS
+ffmpeg -list_devices true -f dshow -i dummy
+
+LINUX
+Video
+v4l2-ctl --list-devices
+Audio
+arecord -l
+
+CONCATENATE
+ffmpeg -f concat -i mylist.txt -c copy output.mp4
+
+ffmpeg -f concat -i <(printf "file '%s'\n" *.mp4) -c copy output.mp4
+
+
+iceweasel https://www.youtube.com/watch?v=NmF1NMZ_nC4
+
+
+[dshow @ 0000000002d064c0]  "HD Pro Webcam C920"
+[dshow @ 0000000002d064c0]     Alternative name "@device_pnp_\\?\usb#vid_046d&pid_082d&mi_00#7&1a5b97c6&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global"
+[dshow @ 0000000002d064c0]  "HD Pro Webcam C920"
+[dshow @ 0000000002d064c0]     Alternative name "@device_pnp_\\?\usb#vid_046d&pid_082d&mi_00#7&295ae046&0&0000#{65e8773d-8f56-11d0-a3b9-00a0c9223196}\global"
+[dshow @ 0000000002d064c0]  "Microphone (3- HD Pro Webcam C9"
+[dshow @ 0000000002d064c0]     Alternative name "@device_cm_{33D9A762-90C8-11D0-BD43-00A0C911CE86}\Microphone (3- HD Pro Webcam C9"
+[dshow @ 0000000002d064c0]  "Microphone (2- HD Pro Webcam C9"
+[dshow @ 0000000002d064c0]     Alternative name "@device_cm_{33D9A762-90C8-11D0-BD43-00A0C911CE86}\Microphone (2- HD Pro Webcam C9"
+
+sudo ./configure --enable-shared --enable-gpl --prefix=/usr --enable-nonfree --enable-libmp3lame --enable-version3 --disable-mmx
+sudo make
+sudo make install
+
+
+mkfifo temp1 temp2
+ffmpeg -i video0.mp4 -c copy -bsf:v h264_mp4toannexb -f mpegts temp1 2> /dev/null & \
+ffmpeg -i video1.mp4 -c copy -bsf:v h264_mp4toannexb -f mpegts temp2 2> /dev/null & \
+ffmpeg -f mpegts -i "concat:temp1|temp2" -c copy -bsf:a aac_adtstoasc output1.mp4
+
+ffmpeg -i video0.mp4 -c copy -bsf:v h264_mp4toannexb -f mpegts intermediate1.ts
+ffmpeg -i video1.mp4 -c copy -bsf:v h264_mp4toannexb -f mpegts intermediate2.ts
+ffmpeg -i "concat:intermediate1.ts|intermediate2.ts" -c copy -bsf:a aac_adtstoasc output1.mp4
+
+
+gst-launch-1.0 -e -v udpsrc port=5000 ! application/x-rtp, clock-rate=90000, encoding-name=H264, payload=96 ! rtpjitterbuffer ! rtph264depay ! h264parse ! "video/x-h264, format=byte-stream" ! filesink location=test.h264
+
+gst-launch-1.0 v4l2src device=/dev/video0 -e -v udpsrc port=5000 ! application/x-rtp, clock-rate=90000, encoding-name=H264, payload=96 ! rtpjitterbuffer ! rtph264depay ! h264parse ! mp4mux ! filesink location=test.mp4
+
+gst_launch -e uvch264_src device=/dev/video1 name=src auto-start=true src.vfsrc ! queue ! video/x-raw-yuv,width=320,height=240,framerate=30/1 ! xvimagesink src.vidsrc ! queue ! video/x-h264,width=1920,height=1080,framerate=30/1,profile=constrained-baseline ! h264parse ! mp4mux ! filesink location=test.mp4
+
+cat video0.ts video1.ts video2.ts > all.ts
+ffmpeg -i all.ts -acodec copy -vcodec copy all.mp4
+
+
+ffmpeg -i video0.mp4 -vcodec copy -an -f h264 part0.h264
+ffmpeg -i video0.mp4 -vn -acodec copy part0.mp3
+ffmpeg -i video1.mp4 -vcodec copy -an -f h264 part1.h264
+ffmpeg -i video1.mp4 -vn -acodec copy part1.mp3
+ffmpeg -i video2.mp4 -vcodec copy -an -f h264 part2.h264
+ffmpeg -i video2.mp4 -vn -acodec copy part2.mp3
+ffmpeg -i video3.mp4 -vcodec copy -an -f h264 part3.h264
+ffmpeg -i video3.mp4 -vn -acodec copy part3.mp3
+ffmpeg -i video4.mp4 -vcodec copy -an -f h264 part4.h264
+ffmpeg -i video4.mp4 -vn -acodec copy part4.mp3
+cat part0.h264 part1.h264 part2.h264 part3.h264 part4.h264 > concat.h264
+cat part0.mp3 part1.mp3 part2.mp3 part3.mp3 part4.mp3 > concat.mp3
+ffmpeg -i concat.h264 -i concat.mp3 -vcodec copy -acodec copy -y output.mp4
+
+
+ffmpeg -i part0.h264 -i part2.h264 -filter_complex "[0:v:0]pad=iw*2:ih[bg]; [bg][1:v:0]overlay=w" froga.mp4
+
+ffmpeg -i part0.h264 -i part2.h264 \
+-filter_complex "[1:0] setsar=sar=1,format=rgba [1sared]; [0:0]format=rgba [0rgbd]; [0rgbd][1sared]blend=all_mode='addition':repeatlast=1:all_opacity=1,format=yuva422p10le" \
+-c:v libx264 -preset slow -tune film -crf 19 \
+-c:a aac -strict -2 -ac 2 -b:a 256k \
+-pix_fmt yuv420p froga.mp4
+
+file_date=$(date +%d-%m-%Y_%H-%M);
+ffmpeg -i concat.h264 -i concat.aac -vcodec copy -acodec alaw -y output_no_compression.mp4
+
+ffmpeg -i test_append.h264 -codec copy -y test_append.mp4
+
+
+
+ffmpeg -ss 00:00:00.4 -i part0.aac -acodec copy -y part0_cut.aac
+
+
+
+
+ffmpeg -i video.mp4 -vcodec copy -an -f h264 video.h264
+ffmpeg -i video.mp4 -vn -acodec copy video.mp3
+ffmpeg -i video.h264 -i video.mp3 -vcodec copy -acodec libmp3lame -y video_rem.mp4
+
+ffmpeg -i video0.avi -c copy video0_rem.avi
+
+
+ffmpeg -i test.h264 -vcodec copy video_prueba.mp4
+
+
+ffmpeg -i video0.h264 -i video1.h264 -filter_complex "[0:v:0]pad=iw*2:ih[bg]; [bg][1:v:0]overlay=w" mosaic.h264
+
+
+ffmpeg -f concat -i video_files.txt -c copy -y -fflags igndts output.mp4

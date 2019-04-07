@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Grabador.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SQLcomputer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">equipo_1</Value>
+    </Setting>
+    <Setting Name="SQLhost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bidaicam.com</Value>
+    </Setting>
+    <Setting Name="SQLdatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bidaicam_frogak</Value>
+    </Setting>
+    <Setting Name="SQLuser" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bidaicam_adm</Value>
+    </Setting>
+    <Setting Name="SQLpass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Oliva7esperanza4casa</Value>
+    </Setting>
+    <Setting Name="LogsDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">logs</Value>
+    </Setting>
+    <Setting Name="secuencia" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="VideoDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">videos</Value>
+    </Setting>
+    <Setting Name="DebugDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">debug</Value>
+    </Setting>
+    <Setting Name="DestinationDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\</Value>
+    </Setting>
+    <Setting Name="GPSPort" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">COM3</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
